@@ -46,3 +46,13 @@ def calculate_event_total(
         return discounted_cost + SERVICE_FEE
 
     return discounted_cost
+
+
+def needs_signoff(total: float) -> bool:
+    """Returns whether an event needs a manager to sign-off before proceeding."""
+    return total > SIGNOFF_LIMIT
+
+
+def needs_second_chef(guests: int, total: float) -> bool:
+    """Returns if the event will need a second chef based on guest total or cost total."""
+    return guests > SECOND_CHEF_GUEST_LIMIT or total >= SECOND_CHEF_TOTAL_LIMIT
