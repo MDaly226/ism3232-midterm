@@ -2,8 +2,10 @@ from business_rules import (
     calculate_event_total,
     calculate_food_cost,
     get_event_discount,
+    largest_event,
     needs_second_chef,
     needs_signoff,
+    total_booked,
 )
 
 
@@ -69,3 +71,58 @@ def test_no_second_chef_under_3000():
 
 def test_no_second_chef_at_3000():
     assert needs_second_chef(48, 3000.00) is True
+
+
+def test_total_booked_multiple_events():
+    events = [
+        {"client": "Client 1", "guest_price": 30.00, "guests": 12, "nonprofit": False},
+        {"client": "Client 2", "guest_price": 35.00, "guests": 18, "nonprofit": False},
+    ]
+    assert round(total_booked(events), 2) == 1065.00
+
+
+def test_total_booked_single_event():
+    events = [
+        {"client": "Client 1", "guest_price": 30.00, "guests": 15, "nonprofit": False}
+    ]
+    assert round(total_booked(events), 2) == 525.00
+
+
+def test_largest_event_returns_largest_client():
+    events = [
+        {
+            "client": "Small Event",
+            "guest_price": 20.00,
+            "guests": 10,
+            "nonprofit": False,
+        },
+        {
+            "client": "Large Event",
+            "guest_price": 40.00,
+            "guests": 50,
+            "nonprofit": False,
+        },
+    ]
+    assert largest_event(events) == "Large Event"
+
+
+def test_largest_event_tie_returns_first_booked():
+    events = [
+        {
+            "client": "First Client",
+            "guest_price": 15.00,
+            "guests": 12,
+            "nonprofit": False,
+        },
+        {
+            "client": "Second Client",
+            "guest_price": 15.00,
+            "guests": 12,
+            "nonprofit": False,
+        },
+    ]
+    assert largest_event(events) == "First Client"
+
+
+def test_largest_event_no_reservations():
+    assert largest_event([]) == ""

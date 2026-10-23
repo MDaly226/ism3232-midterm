@@ -56,3 +56,40 @@ def needs_signoff(total: float) -> bool:
 def needs_second_chef(guests: int, total: float) -> bool:
     """Returns if the event will need a second chef based on guest total or cost total."""
     return guests > SECOND_CHEF_GUEST_LIMIT or total >= SECOND_CHEF_TOTAL_LIMIT
+
+
+def total_booked(events: list) -> float:
+    """Returns the total value of all booked events"""
+    total = 0.00
+
+    for event in events:
+        event_total = calculate_event_total(
+            event["guest_price"],
+            event["guests"],
+            event["nonprofit"],
+        )
+        total += event_total
+
+    return total
+
+
+def largest_event(events: list) -> str:
+    """Returns the client with the largest event total price."""
+    if not events:
+        return ""
+
+    largest_client = ""
+    largest_total = -1.0
+
+    for event in events:
+        event_total = calculate_event_total(
+            event["guest_price"],
+            event["guests"],
+            event["nonprofit"],
+        )
+
+        if event_total > largest_total:
+            largest_total = event_total
+            largest_client = event["client"]
+
+    return largest_client
