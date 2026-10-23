@@ -1,6 +1,7 @@
 from business_rules import (
     calculate_event_total,
     calculate_food_cost,
+    format_event_line,
     get_event_discount,
     largest_event,
     needs_second_chef,
@@ -126,3 +127,18 @@ def test_largest_event_tie_returns_first_booked():
 
 def test_largest_event_no_reservations():
     assert largest_event([]) == ""
+
+
+def test_format_event_line_no_flags():
+    result = format_event_line("Finch Law", 400.00, False, False)
+    assert result == "Finch Law: $400.00 | Manager Sign-off: No | Second Chef: No"
+
+
+def test_format_event_line_yes_flags():
+    result = format_event_line("Hilltop Gym", 3000.00, True, True)
+    assert result == "Hilltop Gym: $3000.00 | Manager Sign-off: Yes | Second Chef: Yes"
+
+
+def test_format_event_line_two_decimals():
+    result = format_event_line("Test Client", 100, False, False)
+    assert "$100.00" in result
